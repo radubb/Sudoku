@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <omp.h>
 
 #define SZ 12
 
