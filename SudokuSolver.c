@@ -15,6 +15,7 @@ int isAvailable(int puzzle[][SZ], int row, int col, int num)
         if (puzzle[i][col] == num) return 0;
         if (puzzle[rowStart + (i%3)][colStart + (i/4)] == num) return 0;
     }
+
     return 1;
 }
 
@@ -57,7 +58,23 @@ int fillSudoku(int puzzle[][SZ], int row, int col)
 
 int main()
 {
-    int i, j;
+    int i, j, tid;
+
+
+    omp_set_num_threads(2);
+
+
+    #pragma omp parallel
+    {
+        #pragma omp single
+        for (i = 0; i < 4; i++) {
+            #pragma omp task
+            {
+                tid = omp_get_thread_num();
+                printf("%d\n", tid);    
+            }
+        }
+    }
 
 	int puzzle[SZ][SZ]={{0, 0, 3, 6, 0, 0, 0, 0, 0, 7, 10, 0},
     					{0, 0, 9, 0, 0, 5, 12, 0, 1, 0, 0, 0},
@@ -68,7 +85,7 @@ int main()
     					{10, 0, 0, 0, 0, 1, 0, 0, 4, 0, 0, 0},
     					{9, 0, 0, 8, 0, 7, 4, 0, 0, 0, 5, 0},
     					{0, 12, 0, 0, 2, 0, 0, 0, 0, 6, 0, 7},
-    					{8, 0, 12, 2, 4, 0, 0, 0, 0, 1, 0, 20},
+    					{8, 0, 12, 2, 4, 0, 0, 0, 0, 1, 0, 0},
     					{4, 0, 0, 1, 0, 0, 0 ,2, 11, 12, 9, 0},
     					{0, 3, 10, 0, 12, 0, 9, 0, 8, 2, 0, 0},
                         };
