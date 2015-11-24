@@ -128,21 +128,25 @@ int main()
                 puzzle[k][i][j] = puzzle[0][i][j];
     perm(puzzle, 0, 0);
 
-    //omp_set_num_threads(1);
+    //omp_set_num_threads(4);
     //count = 1;
+
+    int gata = 0;
 
 	#pragma omp parallel for private(k, i, j)
 	for(k = 0; k < count; k++) {
-		if(fillSudoku(puzzle[k], 0, 0))
+		if(!gata && fillSudoku(puzzle[k], 0, 0))
 		{
 			printf("COUNT: %d\n+-----+-----+-----+\n", k);
 			for(i=1; i<SZ+1; ++i)
 			{
-				for(j=1; j<SZ+1; ++j) printf("|%d", puzzle[k][i-1][j-1]);
+				for(j=1; j<SZ+1; ++j) printf("|%2d", puzzle[k][i-1][j-1]);
 				printf("|\n");
 				if (i%3 == 0) printf("+-----+-----+-----+\n");
 			}
-            exit(0);
+            //exit(0);
+            #pragma omp atomic
+            gata++;
 		}
 	}
 
